@@ -1,6 +1,55 @@
 #+title: Build Your Own Lisp (in C)
 
-* CHapter 4
+My personal repo for [[https://www.buildyourownlisp.com/][Build Your Own Lisp]].
+
+* Compilation
+:PROPERTIES:
+:CREATED:  [2025-12-11 Thu 19:13]
+:END:
+
+Without debugging:
+
+#+begin_src sh
+  cc -std=c99 -Wall program.c -o program
+#+end_src
+
+With debugging:
+
+#+begin_src sh
+  cc -std=c99 -Wall -g -O0 program.c -o program
+  gdb program
+#+end_src
+
+Here's an example session in =gdb=:
+
+#+begin_example
+  (gdb) layout src
+  (gdb) break main
+  Breakpoint 1 at 0x114c: file chapter3.c, line 12.
+  (gdb) run
+  Starting program: /home/alc/src/build-your-own-lisp/chapter3/chapter3
+  [Thread debugging using libthread_db enabled]
+  Using host libthread_db library "/usr/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+  Breakpoint 1, main (argc=1, argv=0x7fffffffddf8) at chapter3.c:12
+  12	  p.x = 2;
+  (gdb) next
+  13	  p.y = 3;
+  (gdb) next
+  14	  int addition = add_together(p.x, p.y);
+  (gdb) print p
+  $1 = {x = 2, y = 3}
+  (gdb) next
+  15	}
+  (gdb) print addition
+  $2 = 5
+  (gdb) continue
+  Continuing.
+  [Inferior 1 (process 40937) exited normally]
+  (gdb) quit
+#+end_example
+
+* Chapter 4
 :PROPERTIES:
 :CREATED:  [2025-12-09 Tue 22:49]
 :END:
