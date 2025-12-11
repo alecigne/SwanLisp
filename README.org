@@ -1,0 +1,10 @@
+#+title: Build Your Own Lisp (in C)
+
+* CHapter 4
+:PROPERTIES:
+:CREATED:  [2025-12-09 Tue 22:49]
+:END:
+
+#+begin_src sh
+  sudo apt install libedit-dev
+#+end_src
