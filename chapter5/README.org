@@ -1,0 +1,53 @@
+#+title: Chapter 5
+
+* Compilation
+:PROPERTIES:
+:CREATED:  [2025-12-13 Sat 14:06]
+:END:
+
+#+begin_src sh
+  cc -std=c99 -Wall chapter5.c mpc.c -o chapter5
+#+end_src
+
+* Having fun with grammars
+:PROPERTIES:
+:CREATED:  [2025-12-13 Sat 18:57]
+:END:
+
+This chapter made me think of [[https://norvig.github.io/paip-lisp/#/chapter2][chapter 2]] from Peter Norvig's Paradigms
+of Artificial Intelligence Programming, in which we create a grammar
+to generate text.
+
+I used that code to generate a Doge grammar that is close to BYOL's
+version.
+
+You can check it [[https://github.com/alecigne/lisp-books/blob/master/paip/paip2/paip2.lisp][here]]. The grammar looks like this:
+
+#+begin_src lisp
+  (defparameter *doge-grammar*
+    '((Doge -> Phrase+)
+      (Phrase+ -> (Phrase) (Phrase Phrase+))
+      (Phrase -> (Interjection? Adjective Noun))
+      (Interjection? -> () (Interjection))
+      (Interjection -> wow)
+      (Adjective -> many so such very)
+      (Noun -> lisp language book build c)))
+#+end_src
+
+Below is a generation of 10 "doges":
+
+#+begin_example
+  PAIP2> (loop repeat 10 collect (generate 'doge))
+  ((SO LANGUAGE WOW SUCH BOOK)
+   (WOW VERY BUILD WOW VERY BOOK VERY LANGUAGE)
+   (WOW MANY LISP)
+   (SO BUILD)
+   (WOW VERY LISP)
+   (WOW SUCH LISP)
+   (SO BUILD)
+   (SO BOOK)
+   (WOW VERY LISP)
+   (VERY LANGUAGE SUCH LANGUAGE))
+#+end_example
+
+Wow, so 2013.
