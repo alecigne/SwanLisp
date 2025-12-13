@@ -1,5 +1,7 @@
 #+title: SwanLisp
 
+[[file:.files/swanlisp_notext.png]]
+
 SwanLisp is a Lisp written in C. It is my personal repo for the [[https://www.buildyourownlisp.com/][Build
 Your Own Lisp]] book.
 
