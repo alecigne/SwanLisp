@@ -2,3 +2,9 @@
 
 SwanLisp is a Lisp written in C. It is my personal repo for the [[https://www.buildyourownlisp.com/][Build
 Your Own Lisp]] book.
+
+See the notes for each chapter.
+
+- [[file:chapter2/][Chapter 2]]
+- [[file:chapter3/][Chapter 3]]
+- [[file:chapter4/][Chapter 4]]
