@@ -5,8 +5,11 @@
 :CREATED:  [2025-12-13 Sat 14:06]
 :END:
 
+I included =mpc= as a [[file:../lib/mpc/][submodule]]. Thus the command becomes, from the
+root dir:
+
 #+begin_src sh
-  cc -std=c99 -Wall chapter5.c mpc.c -o chapter5
+  cc -std=c99 -Wall -Ilib/mpc chapter5/doge_code.c lib/mpc/mpc.c -o build/doge_code
 #+end_src
 
 * Having fun with grammars
