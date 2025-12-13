@@ -73,3 +73,144 @@ The program in chapter 4 uses libraries that need to be linked.
 #+begin_src sh
   sudo apt install libedit-dev
 #+end_src
+
+** Simplest version
+:PROPERTIES:
+:CREATED:  [2025-12-13 Sat 10:45]
+:END:
+
+#+begin_src c
+  #include <stdio.h>
+
+  static char input[2048];
+
+  int main(int argc, char** argv) {
+    puts("Lispy v0.0.1");
+    puts("Press Ctrl+C to exit\n");
+    while (1) {
+      fputs("lispy> ", stdout);
+      fgets(input, 2048, stdin);
+      printf("No, you're a %s", input);
+    }
+  }
+#+end_src
+
+** Preparing the use of a lib
+:PROPERTIES:
+:CREATED:  [2025-12-13 Sat 10:47]
+:END:
+
+We're going to use =libedit= on Linux, but not on Windows. So we must
+prepare functions that behave more or less the same on Windows. Here's
+a first version, equivalent to the simplest version above:
+
+#+begin_src c
+  #include <stdio.h>
+
+  static char input[2048];
+
+  char* readline(char* prompt) {
+    fputs(prompt, stdout);
+    fgets(input, 2048, stdin);
+    return input;
+  }
+
+  void add_history(char* input) {}
+
+  int main(int argc, char** argv) {
+    puts("Lispy v0.0.1");
+    puts("Press Ctrl+C to exit\n");
+    while (1) {
+      char* input = readline("lispy> ");
+      add_history(input);
+      printf("No, you're a %s", input);
+    }
+  }
+#+end_src
+
+Here the problem is that:
+
+- ~readline~ doesn't strip the line return like the lib does
+- Calling ~free~ on the input will fail because ~malloc~ was not used
+  (I'll understand this later I guess 🙂).
+
+This version fixes both of these problems, and we can add an extra
+newline + call ~free~.
+
+#+begin_src c
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
+
+  static char buffer[2048];
+
+  char* readline(char* prompt) {
+    fputs(prompt, stdout);
+    fgets(buffer, 2048, stdin);
+    // Allocate buffer size + 1 byte for the null terminator
+    char* cpy = malloc(strlen(buffer)+1);
+    // Copy buffer in that memory space
+    strcpy(cpy, buffer);
+    // Replace the \n by \0 (the following null terminator will become useless I
+    // think)
+    cpy[strlen(cpy)-1] = '\0';
+    return cpy;
+  }
+
+  void add_history(char* input) {}
+
+  int main(int argc, char** argv) {
+    puts("Lispy v0.0.1");
+    puts("Press Ctrl+C to exit\n");
+    while (1) {
+      char* input = readline("lispy> ");
+      add_history(input);
+      printf("No, you're a %s\n", input);
+      free(input);
+    }
+  }
+#+end_src
+
+** Final version
+:PROPERTIES:
+:CREATED:  [2025-12-13 Sat 11:02]
+:END:
+
+Now we can conditionally include functionalities from =libedit=, only
+on Linux.
+
+#+begin_src c
+  #include <stdio.h>
+  #include <stdlib.h>
+
+  #ifdef _WIN32
+  #include <string.h>
+
+  static char buffer[2048];
+
+  char* readline(char* prompt) {
+    fputs(prompt, stdout);
+    fgets(buffer, 2048, stdin);
+    char* cpy = malloc(strlen(buffer)+1);
+    strcpy(cpy, buffer);
+    cpy[strlen(cpy)-1] = '\0';
+    return cpy;
+  }
+
+  void add_history(char* input) {}
+  #else
+  #include <editline/readline.h>
+  #include <editline/history.h>
+  #endif
+
+  int main(int argc, char** argv) {
+    puts("Lispy v0.0.1");
+    puts("Press Ctrl+C to exit\n");
+    while (1) {
+      char* input = readline("lispy> ");
+      add_history(input);
+      printf("No, you're a %s\n", input);
+      free(input);
+    }
+  }
+#+end_src
