@@ -54,3 +54,58 @@ Below is a generation of 10 "doges":
 #+end_example
 
 Wow, so 2013.
+
+* Questions
+:PROPERTIES:
+:CREATED:  [2025-12-14 Sun 15:48]
+:END:
+
+** Describe textually a grammar for decimal numbers
+:PROPERTIES:
+:CREATED:  [2025-12-14 Sun 15:49]
+:END:
+
+Well, the fun above is going to be very useful. We're going to
+describe our grammar using the format from [[https://github.com/alecigne/lisp-books/blob/master/paip/paip2/paip2.lisp][PAIP chapter 2]].
+
+Here it is:
+
+#+begin_src lisp
+  (defparameter *byol-decimal-grammar*
+    '((Decimal  -> (Digits+ Dot Digits+))
+      (Dot      -> ".")
+      (Digits+  -> (Digit) (Digit Digits+))
+      (Digit    -> "0" "1" "2" "3" "4" "5" "6" "7" "8" "9")))
+#+end_src
+
+We will add a very simple function to concatenate a list of strings,
+since all our terminals in this grammar are strings:
+
+#+begin_src lisp
+  (defun generate-string (start)
+    (apply #'concatenate 'string (generate start)))
+#+end_src
+
+Now let's use it to generate examples of our grammar:
+
+#+begin_example
+  PAIP2> (setf *grammar* *byol-decimal-grammar*)
+  PAIP2> (loop repeat 10 collect (generate-string 'decimal))
+  ("5.340" "41329.1" "7.80" "662.2" "7.20" "4.9" "91.31" "4.6" "28387.0" "13.7")
+#+end_example
+
+Pretty cool.
+
+** Describe textually a grammar for web URLs
+:PROPERTIES:
+:CREATED:  [2025-12-14 Sun 15:55]
+:END:
+
+TODO 🙂
+
+** Describe textually a grammar for simple English sentences
+:PROPERTIES:
+:CREATED:  [2025-12-14 Sun 15:56]
+:END:
+
+Already done in [[https://github.com/alecigne/lisp-books/blob/master/paip/paip2/paip2.lisp][PAIP2]]!

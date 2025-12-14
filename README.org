@@ -10,4 +10,4 @@ See the notes for each chapter.
 - [[file:chapter2/][Chapter 2]]
 - [[file:chapter3/][Chapter 3]]
 - [[file:chapter4/][Chapter 4]]
-- [[file:chapter5/][Chapter 5]] (in progress)
+- [[file:chapter5/][Chapter 5]]
