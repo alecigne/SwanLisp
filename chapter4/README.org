@@ -1,16 +1,5 @@
 #+title: Chapter 4
 
-The program in chapter 4 uses libraries that need to be linked.
-
-- =-lm= is for the =libm= library.
-- =-ledit= is for =libedit= library.
-
-=libm= is provided by =glibc=, but =libedit= needs a system install:
-
-#+begin_src sh
-  sudo apt install libedit-dev
-#+end_src
-
 * Simplest version
 :PROPERTIES:
 :CREATED:  [2025-12-13 Sat 10:45]
@@ -32,14 +21,20 @@ The program in chapter 4 uses libraries that need to be linked.
   }
 #+end_src
 
+- ~puts~   writes a string to =stdout= and appends a newline.
+- ~fputs~  writes a string to a given ~FILE*~ stream without appending a newline.
+- ~printf~ writes formatted output to =stdout=.
+
 * Preparing the use of a lib
 :PROPERTIES:
 :CREATED:  [2025-12-13 Sat 10:47]
 :END:
 
-We're going to use =libedit= on Linux, but not on Windows. So we must
-prepare functions that behave more or less the same on Windows. Here's
-a first version, equivalent to the simplest version above:
+We're going to use =libedit= on Linux, a lib that provides the
+~readline~ and ~add_history~ functions. But we will not use the same
+implementations of these two functions on Windows.
+
+First, let's transform the original program to call the functions:
 
 #+begin_src c
   #include <stdio.h>
@@ -65,14 +60,19 @@ a first version, equivalent to the simplest version above:
   }
 #+end_src
 
-Here the problem is that:
+Problems:
 
-- ~readline~ doesn't strip the line return like the lib does
-- Calling ~free~ on the input will fail because ~malloc~ was not used
-  (I'll understand this later I guess 🙂).
+- =libedit='s ~readline~ will strip the final newline, unlike
+  ~fgets~. So the newline must be added back. Our ~readline~ function
+  doesn't strip the newline.
 
-This version fixes both of these problems, and we can add an extra
-newline + call ~free~.
+- Unlike ~fgets~, which writes to some existing buffer, =libedit='s
+  readline function allocates new memory that must be freed with
+  ~free~, from =stdlib=. If we call ~free~ on the input in the current
+  code, it will fail.
+
+Let's fix these problems so we can add the extra newline and call
+~free~ on =input=, just like we will when using the library.
 
 #+begin_src c
   #include <stdio.h>
@@ -88,8 +88,8 @@ newline + call ~free~.
     char* cpy = malloc(strlen(buffer)+1);
     // Copy buffer in that memory space
     strcpy(cpy, buffer);
-    // Replace the \n by \0 (the following null terminator will become useless I
-    // think)
+    // Replace the \n by \0 (there will be 2 null terminators and the second will
+    // be useless I think)
     cpy[strlen(cpy)-1] = '\0';
     return cpy;
   }
@@ -112,6 +112,18 @@ newline + call ~free~.
 :PROPERTIES:
 :CREATED:  [2025-12-13 Sat 11:02]
 :END:
+
+=libedit= needs to be installed first:
+
+#+begin_src sh
+  sudo apt install libedit-dev
+#+end_src
+
+Then linked when compiling:
+
+#+begin_src sh
+  cc -std=c99 -Wall program.c -ledit -o program
+#+end_src
 
 Now we can conditionally include functionalities from =libedit=, only
 on Linux.
