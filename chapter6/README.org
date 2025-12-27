@@ -1,0 +1,17 @@
+#+title: Chapter 6
+
+* Compilation
+:PROPERTIES:
+:CREATED:  [2025-12-27 Sat 17:23]
+:END:
+
+#+begin_src sh
+  cc -std=c99 -Wall -Ilib/mpc chapter6/parsing.c lib/mpc/mpc.c -ledit -o build/parsing
+#+end_src
+
+* Bonus Marks
+:PROPERTIES:
+:CREATED:  [2025-12-27 Sat 17:35]
+:END:
+
+TODO

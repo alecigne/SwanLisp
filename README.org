@@ -11,3 +11,4 @@ See the notes for each chapter.
 - [[file:chapter3/][Chapter 3]]
 - [[file:chapter4/][Chapter 4]]
 - [[file:chapter5/][Chapter 5]]
+- [[file:chapter6/][Chapter 6]]
