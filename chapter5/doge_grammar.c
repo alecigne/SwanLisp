@@ -1,4 +1,4 @@
-#include "mpc.h"
+#include <mpc.h>
 
 int main(int argc, char** argv) {
   mpc_parser_t* Adjective = mpc_new("adjective");
