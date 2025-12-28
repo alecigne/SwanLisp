@@ -17,6 +17,11 @@ root dir:
 :CREATED:  [2025-12-13 Sat 18:57]
 :END:
 
+** Common Lisp
+:PROPERTIES:
+:CREATED:  [2025-12-28 Sun 13:26]
+:END:
+
 This chapter made me think of [[https://norvig.github.io/paip-lisp/#/chapter2][chapter 2]] from Peter Norvig's Paradigms
 of Artificial Intelligence Programming, in which we create a grammar
 to generate text.
@@ -55,7 +60,34 @@ Below is a generation of 10 "doges":
 
 Wow, so 2013.
 
-* Questions
+** =nearley.js=
+:PROPERTIES:
+:CREATED:  [2025-12-28 Sun 13:26]
+:END:
+
+[[https://nearley.js.org/][Nearley]] is a JS parser. A playground is available [[https://omrelli.ug/nearley-playground/][here]] for parsing and
+generation.
+
+For the Doge grammar above:
+
+#+begin_example
+  doge -> phrase (", " phrase):*
+  phrase -> (interjection " "):? adjective " " noun
+  interjection -> "wow"
+  adjective -> "many" | "so" | "such" | "very"
+  noun -> "lisp" | "language" | "book" | "build" | "c"
+#+end_example
+
+Results:
+
+#+begin_example
+  wow so c, many lisp
+  wow many build
+  wow such c, wow such c, wow many lisp, such build, very lisp
+  so build
+#+end_example
+
+* Bonus Marks
 :PROPERTIES:
 :CREATED:  [2025-12-14 Sun 15:48]
 :END:
@@ -94,7 +126,22 @@ Now let's use it to generate examples of our grammar:
   ("5.340" "41329.1" "7.80" "662.2" "7.20" "4.9" "91.31" "4.6" "28387.0" "13.7")
 #+end_example
 
-Pretty cool.
+Pretty cool. Let's do it with Nearley:
+
+#+begin_example
+  decimal -> "-":? digit:+ dot digit:+
+  dot -> "."
+  digit -> [0-9]
+#+end_example
+
+Results:
+
+#+begin_example
+  59.2
+  3623.46
+  32318.4
+  -83.10244
+#+end_example
 
 ** Describe textually a grammar for web URLs
 :PROPERTIES:

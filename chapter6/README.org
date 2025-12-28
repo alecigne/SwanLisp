@@ -5,9 +5,45 @@
 :CREATED:  [2025-12-27 Sat 17:23]
 :END:
 
+In [[file:../chapter5/][Chapter 5]], I included =mpc= as a submodule. In this chapter we need
+both =mpc= and =editline=:
+
 #+begin_src sh
   cc -std=c99 -Wall -Ilib/mpc chapter6/parsing.c lib/mpc/mpc.c -ledit -o build/parsing
 #+end_src
+
+* =nearley.js=
+:PROPERTIES:
+:CREATED:  [2025-12-28 Sun 13:40]
+:END:
+
+Here's a Nearley version of the Polish Notation Grammar:
+
+#+begin_example
+  lispy -> operator " " expr (" " expr):*
+  expr  -> number | "(" operator " " expr ( _ expr ):* ")"
+  operator -> "+" | "-" | "*" | "/"
+  number -> "-":? [0-9]:+
+#+end_example
+
+This grammar parses examples from the book successfully:
+
+#+begin_example
+  + 1 2 6
+  + 6 (* 2 9)
+  / (* 10 2) (+ 4 2)
+  + 5 (* 2 2)
+#+end_example
+
+...and doesn't parse the wrong inputs. It can also generate data:
+
+#+begin_example
+  - 2
+  / 94 2978 (- -5)
+  ,* -960 -0 741 5 -1
+#+end_example
+
+...that the C parser can parse.
 
 * Bonus Marks
 :PROPERTIES:
