@@ -20,10 +20,11 @@ both =mpc= and =editline=:
 Here's a Nearley version of the Polish Notation Grammar:
 
 #+begin_example
-  lispy -> operator " " expr (" " expr):*
-  expr  -> number | "(" operator " " expr ( _ expr ):* ")"
+  lispy -> operator (_ expr):+
+  expr -> number | "(" operator (_ expr):+ ")"
   operator -> "+" | "-" | "*" | "/"
   number -> "-":? [0-9]:+
+  _ -> " "
 #+end_example
 
 Note that =expr= is recursive. This grammar parses examples from the
